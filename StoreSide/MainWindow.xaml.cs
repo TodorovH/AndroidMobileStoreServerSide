@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using System.Data.SQLite;
+using System.Data;
 
 namespace StoreSide
 {
@@ -22,37 +23,29 @@ namespace StoreSide
     /// </summary>
     public partial class MainWindow : Window
     {
-        string dbConnectionString;
+        public bool Exists { get; set; }
+        public bool IsCorrect { get; set; }
+        public bool IsAdmin { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
 
-            dbConnectionString = @"Data Source = D:\Documents\Android Mobile Store Server Side\StoreSide\StoreSide\mainStore.db; Version = 3;";
+            this.contentControl.Content = new LoginPage();
+
         }
 
-        private void login_btn_Click(object sender, RoutedEventArgs e)
+        public void changeContent()
         {
-            using(SQLiteConnection sqliteCon = new SQLiteConnection(dbConnectionString))
+            if (Exists == true && IsCorrect == true && IsAdmin == true)
             {
-                try
-                {
-                    sqliteCon.Open();
-                    if (sqliteCon.State == System.Data.ConnectionState.Open)
-                    {
-                        MessageBox.Show("Connection is done...");
-                    }
-                    
-                }
-                catch (Exception ex)
-                {
-
-                    MessageBox.Show(ex.Message);
-                }
+                this.contentControl.Content = new AdminPage();
             }
-
+            else if (Exists == true && IsCorrect == true && IsAdmin == false)
+            {
+                this.contentControl.Content = new UserPage();
+            }
             
-              
         }
     }
 }
